@@ -276,22 +276,22 @@ class GrlxPage2_Archive extends GrlxPage2 {
 					$this->markerType['marker_type_id'] = $page['marker_type_id'];
 					$i++;
 					$list[$i] = array(
-						'marker_id'      => $page['marker_id'] ?? null,
+						'marker_id'	  => $page['marker_id'] ?? null,
 						'marker_title'   => $page['marker_title'] ?? '',
 						'marker_description' => $page['marker_description'] ?? '',
-						'marker_img'     => $page['marker_img'] ?? '',
+						'marker_img'	 => $page['marker_img'] ?? '',
 						'marker_img_alt' => $page['marker_img_alt'] ?? '',
-						'marker_rank'    => $page['rank'] ?? null,
-						'pages'          => array()
+						'marker_rank'	=> $page['rank'] ?? null,
+						'pages'		  => array()
 					);
 				}
 				$list[$i]['pages'][$page['sort_order']] = array(
-					'page_id'      => $page['page_id'] ?? null,
+					'page_id'	  => $page['page_id'] ?? null,
 					'page_title'   => $page['page_title'] ?? '',
 					'date_publish' => $page['date_publish'] ?? '',
 					'sort_order'   => $page['sort_order'] ?? null,
-					'options'      => $page['options'] ?? null,
-					'page_img'     => $page['page_img'] ?? '',
+					'options'	  => $page['options'] ?? null,
+					'page_img'	 => $page['page_img'] ?? '',
 					'page_img_alt' => $page['page_img_alt'] ?? ''
 				);
 			}
@@ -459,7 +459,6 @@ class GrlxPage2_Archive extends GrlxPage2 {
 			// Number
 			if ( !empty($this->meta['chapters']) && in_array('number', $this->meta['chapters']) ) {
 				$text[] = $this->markerCount.'. ';
-				$this->markerCount++;
 			}
 			// Title
 			if ( !empty($this->meta['chapters']) && in_array('title', $this->meta['chapters']) ) {
@@ -489,9 +488,21 @@ class GrlxPage2_Archive extends GrlxPage2 {
 			$link = '';
 			if ( !empty($image) || !empty($text) )
 			{
-				$link = '<li class="archive-marker archive-level-'.$info['marker_rank'].'">'."\n".'<div class="archive-header">'.$image."\n<h3 class='marker-title'>".$text.'</h3>'."<div class='marker-description'>$desc\n".'</div></div>'."\n";
+
+				// this modifies the archive-header into a drop down that can be clicked on via checkbox
+				$dropdown_open_tag = '<input type="checkbox" id="chapter-dropdown-'.$this->markerCount.'" role="button"><label for="chapter-dropdown-'.$this->markerCount.'">';
+				$dropdown_close_tag = '</label>';
+				$archive_level_marker = '<li class="archive-marker archive-level-'.$info['marker_rank'].'">'."\n";
+				$archive_header_and_image = '<div class="archive-header">'.$image."\n";
+				$archive_header_close_tag = '</div>';
+				$marker_title = "<h3 class='marker-title'>".$text.'</h3>';
+				$marker_description = "<div class='marker-description'>$desc\n".'</div>';
+
+				$link = $archive_level_marker.$dropdown_open_tag.$archive_header_and_image.$marker_title.$marker_description.$archive_header_close_tag.$dropdown_close_tag."\n";
 			}
 		}
+		// wait to increment this until we're done using it
+		$this->markerCount++;
 		return $link;
 	}
 
